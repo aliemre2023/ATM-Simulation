@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# runable permission
+# -rwxr-xr-x@ 1 aliemre2023  staff  184 Jun 20 17:09 run
+
+echo "System start to run!"
+mvn exec:java -Dexec.mainClass="com.aliemre2023.Main"
