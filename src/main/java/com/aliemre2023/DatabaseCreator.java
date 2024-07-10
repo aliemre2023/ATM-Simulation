@@ -9,13 +9,12 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class DatabaseCreator {
-    public static void main(String[] args){
+    static void createCustomerTable(String dbUrl, String tableName){
         Connection connection = null;
-
         try {
             Class.forName("org.sqlite.JDBC");
 
-            String dbUrl = "jdbc:sqlite:src/main/resources/customers.db";
+            // String dbUrl = "jdbc:sqlite:src/main/resources/customers.db";
             connection = DriverManager.getConnection(dbUrl);
 
             if(connection != null){
@@ -24,15 +23,17 @@ public class DatabaseCreator {
                 // SQL
 
                 // EXECUTEUPDATE for INSERT UPDATE DELETE, CREATE TABLE
-                statement.executeUpdate("""
-                    CREATE TABLE IF NOT EXISTS customers (
+                String sql = String.format("""
+                    CREATE TABLE IF NOT EXISTS %s (
                         id INTEGER,
                         name TEXT,
                         mail TEXT,
                         phone TEXT,
                         money DOUBLE
                     )
-                """);
+                """, tableName);
+
+                statement.executeUpdate(sql);
                 /* 
                 statement.executeUpdate("""
                     INSERT INTO customers (id, name, mail, phone, money)
@@ -69,11 +70,13 @@ public class DatabaseCreator {
             }
         }
 
-
+    }
+    static void createStorageTable(String dbUrl, String cName){
+        Connection connection = null;
         try {
             Class.forName("org.sqlite.JDBC");
 
-            String dbUrl = "jdbc:sqlite:src/main/resources/storage.db";
+            // String dbUrl = "jdbc:sqlite:src/main/resources/storage.db";
             connection = DriverManager.getConnection(dbUrl);
 
             if(connection != null){
@@ -81,8 +84,8 @@ public class DatabaseCreator {
 
                 //// Table for atm storage
 
-                statement.executeUpdate("""
-                    CREATE TABLE IF NOT EXISTS storage (
+                String sql = String.format("""
+                    CREATE TABLE IF NOT EXISTS %s (
                         five INTEGER,
                         ten INTEGER,
                         twenty INTEGER,
@@ -90,14 +93,15 @@ public class DatabaseCreator {
                         hundred INTEGER,
                         twohundred INTEGER
                     )
-                """);
+                """, cName);
+                statement.executeUpdate(sql);
                 
-                
+                /* 
                 statement.executeUpdate("""
                     INSERT INTO storage
                     VALUES (1000, 1000, 1000, 1000, 1000, 1000)
                 """);
-                
+                */
                 
 
                 ResultSet resultSet = statement.executeQuery("SELECT * FROM storage LIMIT 1");
@@ -109,10 +113,6 @@ public class DatabaseCreator {
                     System.out.println("100: " + resultSet.getInt("hundred"));   
                     System.out.println("200: " + resultSet.getInt("twohundred"));
                 }
-
-
-        
-
             }
         }
         catch (Exception e) {
@@ -128,7 +128,16 @@ public class DatabaseCreator {
                 e.printStackTrace();
             }
         }
+    }
 
+    public static void main(String[] args){
+        String dbUrl = "jdbc:sqlite:src/main/resources/customers.db";
+        String cName = "customers";
+        createCustomerTable(dbUrl, cName);
+
+        String dbUrl2 = "jdbc:sqlite:src/main/resources/storage.db";
+        String sName = "storage";
+        createStorageTable(dbUrl2, sName);
 
     }
 }
