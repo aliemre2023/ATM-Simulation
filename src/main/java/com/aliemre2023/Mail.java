@@ -29,7 +29,7 @@ public class Mail {
         mail.sendEmail();
     }
 
-    public void setupServerProperties() {
+    private void setupServerProperties() {
         Properties properties = System.getProperties();
         properties.put("mail.smtp.port", "587");
         properties.put("mail.smtp.auth", "true");
@@ -42,7 +42,7 @@ public class Mail {
         });
     }
 
-    public MimeMessage draftEmail(String[] mails, String subject, String body) throws Exception {
+    private MimeMessage draftEmail(String[] mails, String subject, String body) throws Exception {
         String[] emailReceipents = mails;
         String emailSubject = subject;
         String emailBody = body;
@@ -61,7 +61,7 @@ public class Mail {
         return mimeMessage;
     }
 
-    public void sendEmail() throws Exception {
+    private void sendEmail() throws Exception {
         String fromUser = noreply_mail;
         String fromUserPassword = noreply_password; 
         String emailHost = "smtp.gmail.com";

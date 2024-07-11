@@ -6,6 +6,12 @@ import javax.mail.internet.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,6 +22,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ Mail.class, Transport.class })
 public class MailTest {
 
     private Mail mail;
@@ -23,11 +31,14 @@ public class MailTest {
     private Transport mockTransport;
 
     @Before
-    public void setUp() {
-        mail = new Mail();
-        mail.setupServerProperties();
-        mockSession = mock(Session.class);
-        mockTransport = mock(Transport.class);
+    public void setUp() throws Exception {
+        mail = PowerMockito.spy(new Mail());
+        PowerMockito.doNothing().when(mail, "setupServerProperties");
+        
+        mockSession = PowerMockito.mock(Session.class);
+        mockTransport = PowerMockito.mock(Transport.class);
+        PowerMockito.when(mail, "createNewSession").thenReturn(mockSession);
+
         mail.newSession = mockSession;
     }
 
@@ -44,7 +55,7 @@ public class MailTest {
         String body = "<html><body><h1>Hello World!</h1></body></html>";
 
         // Act
-        MimeMessage mimeMessage = mail.draftEmail(recipients, subject, body);
+        MimeMessage mimeMessage = Whitebox.invokeMethod(mail, "draftEmail", recipients, subject, body);
 
         // Assert
         assertEquals("Subject has a problem", subject, mimeMessage.getSubject());
@@ -68,7 +79,8 @@ public class MailTest {
         when(mockSession.getTransport("smtp")).thenReturn(mockTransport);
 
         // Act
-        mail.sendEmail();
+        // or Whitebox.invokeMethod(mail, "sendEmail");
+        PowerMockito.doNothing().when(mail, "sendMail");
 
         // Assert
         verify(mockTransport, times(1)).connect("smtp.gmail.com", mail.getNoreplyMail(), mail.getNoreplyPassword());
