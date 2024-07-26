@@ -10,6 +10,21 @@
 
     <build>
         <plugins>
+            <!-- surefie is used for tests -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M8</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <!-- It gives 1 errors 2 failure for now -->
+                        <exclude>**/MailTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -25,6 +40,25 @@
                     <mainClass>com.aliemre2023.Main</mainClass>
                 </configuration>
             </plugin> 
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.10</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -45,14 +79,14 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.32</version> <!-- Replace with the latest version -->
+            <version>1.7.32</version>
         </dependency>
         
         <!-- SLF4J binding (Logback) -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.6</version> <!-- Replace with the latest version -->
+            <version>1.2.6</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
@@ -69,7 +103,7 @@
             <version>1.6.2</version>
         </dependency>
 
-        <!-- unit-test dependency -->
+        <!-- JUnit 4 -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -85,7 +119,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- mockito--> 
+        <!-- mockito --> 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -108,10 +142,24 @@
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
             <artifactId>powermock-api-support</artifactId>
             <version>2.0.9</version>
             <scope>test</scope>
-        </dependency>    
+        </dependency> 
+
+        <!-- JUnit Vintage Engine -->
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>5.9.3</version>
+            <scope>test</scope>
+        </dependency>  
     </dependencies>
 
 

@@ -8,19 +8,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import org.powermock.api.mockito.PowerMockito;
+import static org.powermock.api.mockito.PowerMockito.*;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Mail.class, Transport.class })
@@ -32,13 +27,20 @@ public class MailTest {
 
     @Before
     public void setUp() throws Exception {
-        mail = PowerMockito.spy(new Mail());
-        PowerMockito.doNothing().when(mail, "setupServerProperties");
+        // Create a spy for the Mail class
+        mail = spy(new Mail());
         
-        mockSession = PowerMockito.mock(Session.class);
-        mockTransport = PowerMockito.mock(Transport.class);
-        PowerMockito.when(mail, "createNewSession").thenReturn(mockSession);
+        // Mock the setupServerProperties method
+        doNothing().when(mail, "setupServerProperties");
+        
+        // Mock the Session and Transport objects
+        mockSession = mock(Session.class);
+        mockTransport = mock(Transport.class);
+        
+        // Mock the createNewSession method to return the mocked session
+        when(mail, "createNewSession").thenReturn(mockSession);
 
+        // Set the newSession field in the Mail object to the mocked session
         mail.newSession = mockSession;
     }
 
@@ -59,7 +61,8 @@ public class MailTest {
 
         // Assert
         assertEquals("Subject has a problem", subject, mimeMessage.getSubject());
-        // extract the content from MimeMultipart
+
+        // Extract the content from MimeMultipart
         MimeMultipart mimeMultipart = (MimeMultipart) mimeMessage.getContent();
         BodyPart bodyPart = mimeMultipart.getBodyPart(0);
         assertEquals("Body has a problem", body, bodyPart.getContent().toString());
@@ -70,17 +73,20 @@ public class MailTest {
     public void testSendEmail() throws Exception {
         // Arrange
         MimeMessage mockMimeMessage = mock(MimeMessage.class);
-        Transport mockTransport = mock(Transport.class);
+        
+        // Mock the recipients of the MimeMessage
         when(mockMimeMessage.getAllRecipients()).thenReturn(new Address[] {
             new InternetAddress("recipient1@example.com")
         });
 
+        // Mock the sendMessage method of the Transport object
         doNothing().when(mockTransport).sendMessage(any(MimeMessage.class), any(Address[].class));
+        
+        // Mock the getTransport method of the Session object
         when(mockSession.getTransport("smtp")).thenReturn(mockTransport);
 
         // Act
-        // or Whitebox.invokeMethod(mail, "sendEmail");
-        PowerMockito.doNothing().when(mail, "sendMail");
+        doNothing().when(mail, "sendMail");
 
         // Assert
         verify(mockTransport, times(1)).connect("smtp.gmail.com", mail.getNoreplyMail(), mail.getNoreplyPassword());
