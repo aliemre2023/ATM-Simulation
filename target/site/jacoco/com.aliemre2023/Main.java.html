@@ -12,42 +12,42 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 
 <span class="nc" id="L14">public class Main{</span>
-<span class="nc" id="L15">    static int[] papel = {5, 10, 20, 50, 100, 200};</span>
+<span class="fc" id="L15">    static int[] papel = {5, 10, 20, 50, 100, 200};</span>
     static int[] papel_calculater(double amount) throws Exception {
-<span class="nc" id="L17">        int[] storage = {0, 0, 0, 0, 0, 0}; </span>
-<span class="nc" id="L18">        int[] best_division = {0, 0, 0, 0, 0, 0};</span>
+<span class="fc" id="L17">        int[] storage = {0, 0, 0, 0, 0, 0}; </span>
+<span class="fc" id="L18">        int[] best_division = {0, 0, 0, 0, 0, 0};</span>
 
-<span class="nc" id="L20">        Connection conn = null;</span>
-<span class="nc" id="L21">        Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
-<span class="nc" id="L22">        String dbUrl = &quot;jdbc:sqlite:src/main/resources/storage.db&quot;;</span>
-<span class="nc" id="L23">        conn = DriverManager.getConnection(dbUrl);</span>
-<span class="nc" id="L24">        Statement statement = conn.createStatement();</span>
-<span class="nc" id="L25">        String sqlQuery_forStorageInfo = &quot;SELECT * FROM storage LIMIT 1&quot;;</span>
-<span class="nc" id="L26">        ResultSet storage_info = statement.executeQuery(sqlQuery_forStorageInfo);</span>
-<span class="nc" id="L27">        storage[0] = storage_info.getInt(&quot;five&quot;);</span>
-<span class="nc" id="L28">        storage[1] = storage_info.getInt(&quot;ten&quot;);</span>
-<span class="nc" id="L29">        storage[2] = storage_info.getInt(&quot;twenty&quot;);</span>
-<span class="nc" id="L30">        storage[3] = storage_info.getInt(&quot;fifty&quot;);</span>
-<span class="nc" id="L31">        storage[4] = storage_info.getInt(&quot;hundred&quot;);</span>
-<span class="nc" id="L32">        storage[5] = storage_info.getInt(&quot;twohundred&quot;);</span>
+<span class="fc" id="L20">        Connection conn = null;</span>
+<span class="fc" id="L21">        Class.forName(&quot;org.sqlite.JDBC&quot;);</span>
+<span class="fc" id="L22">        String dbUrl = &quot;jdbc:sqlite:src/main/resources/storage.db&quot;;</span>
+<span class="fc" id="L23">        conn = DriverManager.getConnection(dbUrl);</span>
+<span class="fc" id="L24">        Statement statement = conn.createStatement();</span>
+<span class="fc" id="L25">        String sqlQuery_forStorageInfo = &quot;SELECT * FROM storage LIMIT 1&quot;;</span>
+<span class="fc" id="L26">        ResultSet storage_info = statement.executeQuery(sqlQuery_forStorageInfo);</span>
+<span class="fc" id="L27">        storage[0] = storage_info.getInt(&quot;five&quot;);</span>
+<span class="fc" id="L28">        storage[1] = storage_info.getInt(&quot;ten&quot;);</span>
+<span class="fc" id="L29">        storage[2] = storage_info.getInt(&quot;twenty&quot;);</span>
+<span class="fc" id="L30">        storage[3] = storage_info.getInt(&quot;fifty&quot;);</span>
+<span class="fc" id="L31">        storage[4] = storage_info.getInt(&quot;hundred&quot;);</span>
+<span class="fc" id="L32">        storage[5] = storage_info.getInt(&quot;twohundred&quot;);</span>
 
-<span class="nc bnc" id="L34" title="All 2 branches missed.">        for(int i = storage.length - 1; i &gt;= 0; i--){</span>
-<span class="nc bnc" id="L35" title="All 2 branches missed.">            if(amount &gt;= papel[i]) {</span>
-<span class="nc" id="L36">                best_division[i] = (int) (amount / papel[i]);</span>
-<span class="nc" id="L37">                amount -= best_division[i] * papel[i];</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        for(int i = storage.length - 1; i &gt;= 0; i--){</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">            if(amount &gt;= papel[i]) {</span>
+<span class="fc" id="L36">                best_division[i] = (int) (amount / papel[i]);</span>
+<span class="fc" id="L37">                amount -= best_division[i] * papel[i];</span>
             }
         }
 
-<span class="nc" id="L41">        int deficient = 0;</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">        for(int i = storage.length - 1; i &gt;= 0; i--){</span>
-<span class="nc bnc" id="L43" title="All 2 branches missed.">            if(deficient != 0){</span>
+<span class="fc" id="L41">        int deficient = 0;</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        for(int i = storage.length - 1; i &gt;= 0; i--){</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">            if(deficient != 0){</span>
 <span class="nc" id="L44">                best_division[i] += deficient / papel[i];</span>
 <span class="nc" id="L45">                deficient = 0;</span>
             }
 
-<span class="nc bnc" id="L48" title="All 2 branches missed.">            if(storage[i] &gt;= best_division[i]){</span>
-<span class="nc" id="L49">                storage[i] -= best_division[i];</span>
-<span class="nc" id="L50">            }</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">            if(storage[i] &gt;= best_division[i]){</span>
+<span class="fc" id="L49">                storage[i] -= best_division[i];</span>
+<span class="fc" id="L50">            }</span>
             else{
 <span class="nc" id="L52">                int temp = best_division[i] - storage[i];</span>
 <span class="nc" id="L53">                best_division[i] = storage[i];</span>
@@ -56,10 +56,10 @@ import java.text.SimpleDateFormat;
             }
         }
 
-<span class="nc" id="L59">        String sqlQuery_forStorageUpdate = String.format(&quot;UPDATE storage SET five=%d, ten=%d, twenty=%d, fifty=%d, hundred=%d, twohundred=%d WHERE rowid = (SELECT rowid FROM storage LIMIT 1)&quot;, storage[0], storage[1], storage[2], storage[3], storage[4], storage[5]);</span>
-<span class="nc" id="L60">        statement.executeUpdate(sqlQuery_forStorageUpdate);</span>
+<span class="fc" id="L59">        String sqlQuery_forStorageUpdate = String.format(&quot;UPDATE storage SET five=%d, ten=%d, twenty=%d, fifty=%d, hundred=%d, twohundred=%d WHERE rowid = (SELECT rowid FROM storage LIMIT 1)&quot;, storage[0], storage[1], storage[2], storage[3], storage[4], storage[5]);</span>
+<span class="fc" id="L60">        statement.executeUpdate(sqlQuery_forStorageUpdate);</span>
 
-<span class="nc" id="L62">        return best_division;</span>
+<span class="fc" id="L62">        return best_division;</span>
     }
 
     public static void main(String[] args) throws Exception {
